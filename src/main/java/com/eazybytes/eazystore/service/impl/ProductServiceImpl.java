@@ -23,7 +23,7 @@ public class ProductServiceImpl implements IProductService {
     private  final ProductRepository productRepository;
 
 
-    @Cacheable("products")
+    @Cacheable(value = "products", key = "#pageable.pageNumber + '-' + #pageable.pageSize")
     @Override
     public PageResponseDto getProducts(Pageable pageable) {
         Page<Product> page=productRepository.findAll(pageable);
