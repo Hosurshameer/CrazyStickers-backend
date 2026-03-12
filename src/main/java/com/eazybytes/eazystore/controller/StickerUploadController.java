@@ -26,7 +26,7 @@ public class StickerUploadController {
          if (!Files.exists(uploadPath)) {
              Files.createDirectories(uploadPath);
          }
-         String str="sameer";
+
          Path filePath=uploadPath.resolve(fileName);
          Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
          String imageUrl="/images/customer-stickers/"+fileName;
