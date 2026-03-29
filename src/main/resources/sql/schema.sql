@@ -123,7 +123,3 @@ CREATE TABLE IF NOT EXISTS orders
         created_at TIMESTAMP
     );
 
-    insert into roles(name,created_at,created_by) values('ROLE_USER',CURRENT_TIMESTAMP,'DBA');
-    insert into roles(name,created_at,created_by) values('ROLE_ADMIN',CURRENT_TIMESTAMP,'DBA');
-    insert into roles(name,created_at,created_by) values('ROLE_OPS_ENG',CURRENT_TIMESTAMP,'DBA');
-    insert into roles(name,created_at,created_by) values('ROLE_QA_ENG',CURRENT_TIMESTAMP,'DBA');
