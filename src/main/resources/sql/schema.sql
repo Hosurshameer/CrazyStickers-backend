@@ -115,6 +115,14 @@ CREATE TABLE IF NOT EXISTS orders
     FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
     );
 
+    CREATE TABLE custom_stickers (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255),
+        image_path VARCHAR(500),
+        sticker_type VARCHAR(50),
+        created_at TIMESTAMP
+    );
+
     insert into roles(name,created_at,created_by) values('ROLE_USER',CURRENT_TIMESTAMP,'DBA');
     insert into roles(name,created_at,created_by) values('ROLE_ADMIN',CURRENT_TIMESTAMP,'DBA');
     insert into roles(name,created_at,created_by) values('ROLE_OPS_ENG',CURRENT_TIMESTAMP,'DBA');
