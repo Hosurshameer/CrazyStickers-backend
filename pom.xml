@@ -13,6 +13,9 @@
 	<artifactId>eazystore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>eazystore</name>
+
+    <packaging>jar</packaging>
+
 	<description>Bakcend project for my EazyStore E-Commerce application</description>
 	<url/>
 	<licenses>
