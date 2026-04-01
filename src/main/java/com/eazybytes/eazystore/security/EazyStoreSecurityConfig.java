@@ -3,6 +3,7 @@ package com.eazybytes.eazystore.security;
 
 import com.eazybytes.eazystore.filter.JWTTokenValidatorFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +41,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class EazyStoreSecurityConfig {
    private final PublicPathConfig publicPathConfig;
+
+   @Value("${eazystore.cors.allowed.origins}")
+   private String allowedOrigins;
 
     @Bean
 
@@ -105,7 +109,7 @@ public class EazyStoreSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Allow specific origins (update with your frontend URL)
-        config.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+        config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
 
         // Allow all HTTP methods
         config.setAllowedMethods(Collections.singletonList("*"));
