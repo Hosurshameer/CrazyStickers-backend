@@ -123,3 +123,5 @@ CREATE TABLE IF NOT EXISTS orders
         created_at TIMESTAMP
     );
 
+
+    -- Check for syntax errors
