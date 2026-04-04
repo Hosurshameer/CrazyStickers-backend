@@ -51,8 +51,7 @@ public class EazyStoreSecurityConfig {
        CookieCsrfTokenRepository tokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
        tokenRepository.setCookiePath("/"); // Ensure cookie is sent for all backend paths
        return  http.cors(corsConfig -> corsConfig.configurationSource(corsConfigurationSource()))
-               .csrf(csrfConfig->csrfConfig.csrfTokenRepository(tokenRepository)
-                       .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+               .csrf(csrfConfig->csrfConfig.disable())
                .authorizeHttpRequests((requests) ->{
                    publicPathConfig.publicPaths().forEach(path ->
                    requests.requestMatchers(path).permitAll());
