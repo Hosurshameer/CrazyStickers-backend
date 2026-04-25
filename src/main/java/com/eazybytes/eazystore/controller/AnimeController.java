@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -20,12 +21,10 @@ public class AnimeController {
 
 
     @PostMapping("/anime")
-    public ResponseEntity<?> generate(@RequestParam String imageUrl) {
-        try {
-            String result = animeService.generateAnime(imageUrl);
-            return ResponseEntity.ok(Map.of("imageUrl", result));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
-        }
+    public ResponseEntity<?> generate(@RequestParam("file") MultipartFile file) throws Exception {
+
+        String result = animeService.generateAnime(file);
+
+        return ResponseEntity.ok(Map.of("imageUrl", result));
     }
 }
