@@ -68,6 +68,25 @@ public ResponseEntity<ErrorResponseDto> hanadleResourceNotFoundException(Resourc
 
 
 
+    @ExceptionHandler(org.springframework.web.client.HttpClientErrorException.class)
+    public ResponseEntity<ErrorResponseDto> handleHttpClientError(
+            org.springframework.web.client.HttpClientErrorException ex,
+            WebRequest webRequest) {
+
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.valueOf(ex.getStatusCode().value()),
+                ex.getResponseBodyAsString(),
+                LocalDateTime.now()
+        );
+
+        log.error("HTTP Client Error: {}", ex.getMessage());
+
+        return ResponseEntity.status(ex.getStatusCode()).body(errorResponseDto);
+    }
+
+
+
 
 
 }
