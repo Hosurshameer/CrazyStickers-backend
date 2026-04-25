@@ -1,6 +1,7 @@
 package com.eazybytes.eazystore.controller;
 
 
+import com.cloudinary.Cloudinary;
 import com.eazybytes.eazystore.dto.ProfileRequestDto;
 import com.eazybytes.eazystore.dto.ProfileResponseDto;
 import com.eazybytes.eazystore.service.IProfileService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProfileController {
 private final IProfileService iProfileService;
+private final Cloudinary cloudinary;
 
     @GetMapping
     public ResponseEntity<ProfileResponseDto> getProfile(){
@@ -31,4 +33,6 @@ private final IProfileService iProfileService;
        ProfileResponseDto profileResponseDto=iProfileService.updateProfile(profileRequestDto);
        return ResponseEntity.ok(profileResponseDto);
     }
+
+
 }
