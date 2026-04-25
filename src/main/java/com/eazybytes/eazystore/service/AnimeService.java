@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -26,9 +27,17 @@ public class AnimeService {
 
 
 
-    public String generateAnime(String imageUrl) throws Exception {
+    public String generateAnime(MultipartFile file) throws Exception {
 
-        // 🔹 1. Call Replicate
+        // 🔹 STEP 1: Upload original image to Cloudinary
+        Map uploadResult = cloudinary.uploader().upload(
+                file.getBytes(),
+                ObjectUtils.emptyMap()
+        );
+
+        String imageUrl = uploadResult.get("secure_url").toString();
+
+        // 🔹 STEP 2: Call Replicate
         String url = "https://api.replicate.com/v1/models/prunaai/p-image-edit/predictions";
 
         HttpHeaders headers = new HttpHeaders();
@@ -60,12 +69,13 @@ public class AnimeService {
         List<String> output = (List<String>) responseBody.get("output");
         String replicateImageUrl = output.get(0);
 
-        // 🔥 2. Upload to Cloudinary
-        Map uploadResult = cloudinary.uploader().upload(
+
+        // 🔹 STEP 3: Upload AI image to Cloudinary
+        Map finalUpload = cloudinary.uploader().upload(
                 replicateImageUrl,
                 ObjectUtils.emptyMap()
         );
 
-        return uploadResult.get("secure_url").toString();
+        return finalUpload.get("secure_url").toString();
     }
 }
