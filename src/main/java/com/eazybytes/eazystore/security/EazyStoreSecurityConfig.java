@@ -60,6 +60,8 @@ public class EazyStoreSecurityConfig {
                    requests.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
                    requests.requestMatchers("/api/v1/stickers/**").permitAll();
 
+
+
            requests.anyRequest().hasAnyRole("USER","ADMIN");
        })
                .addFilterBefore(new JWTTokenValidatorFilter(publicPathConfig.publicPaths()), BasicAuthenticationFilter.class)
