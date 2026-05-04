@@ -4,10 +4,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,15 +19,15 @@ public class AnimeService {
     @Value("${replicate.api.key}")
     private String replicateApiKey;
 
+    // ✅ keeping exactly as you want
     private final RestTemplate restTemplate = new RestTemplate();
+
     private final Cloudinary cloudinary;
 
-
-
-    public String generateAnime(MultipartFile file) throws Exception {
+    public String generateAnime(MultipartFile file, String prompt) throws Exception {
 
         // 🔹 STEP 1: Upload original image to Cloudinary
-        Map uploadResult = cloudinary.uploader().upload(
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.emptyMap()
         );
@@ -49,7 +46,7 @@ public class AnimeService {
                 "input", Map.of(
                         "turbo", true,
                         "images", List.of(Map.of("value", imageUrl)),
-                        "prompt", "anime style, high quality, detailed face",
+                        "prompt", prompt,
                         "aspect_ratio", "1:1"
                 )
         );
@@ -60,18 +57,27 @@ public class AnimeService {
                 Map.class
         );
 
-        Map responseBody = response.getBody();
+        Map<String, Object> responseBody = response.getBody();
 
-        if (responseBody == null || responseBody.get("output") == null) {
-            throw new RuntimeException("Replicate failed: " + responseBody);
+        // ✅ Safe handling
+        if (responseBody == null) {
+            throw new RuntimeException("Empty response from Replicate");
+        }
+
+        if (responseBody.get("error") != null) {
+            throw new RuntimeException("Replicate error: " + responseBody.get("error"));
         }
 
         List<String> output = (List<String>) responseBody.get("output");
+
+        if (output == null || output.isEmpty()) {
+            throw new RuntimeException("No output received from Replicate");
+        }
+
         String replicateImageUrl = output.get(0);
 
-
         // 🔹 STEP 3: Upload AI image to Cloudinary
-        Map finalUpload = cloudinary.uploader().upload(
+        Map<String, Object> finalUpload = cloudinary.uploader().upload(
                 replicateImageUrl,
                 ObjectUtils.emptyMap()
         );
