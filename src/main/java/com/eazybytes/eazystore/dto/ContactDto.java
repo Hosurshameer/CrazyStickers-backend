@@ -25,5 +25,4 @@ public class ContactDto {
     @NotBlank(message = "Message is mandatory")
     @Size(min=5,max=500,message = "Message should be between 10 and 500 characters")
     private String message;
-
 }
