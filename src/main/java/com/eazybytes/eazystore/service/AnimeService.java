@@ -45,7 +45,7 @@ public class AnimeService {
         Map<String, Object> body = Map.of(
                 "input", Map.of(
                         "turbo", true,
-                        "images", List.of(Map.of("value", imageUrl)),
+                        "images", List.of(imageUrl),
                         "prompt", prompt,
                         "aspect_ratio", "1:1"
                 )
@@ -68,13 +68,18 @@ public class AnimeService {
             throw new RuntimeException("Replicate error: " + responseBody.get("error"));
         }
 
-        List<String> output = (List<String>) responseBody.get("output");
+        Object outputObj = responseBody.get("output");
 
-        if (output == null || output.isEmpty()) {
-            throw new RuntimeException("No output received from Replicate");
+        String replicateImageUrl;
+
+        if (outputObj instanceof List) {
+            List<?> outputList = (List<?>) outputObj;
+            replicateImageUrl = outputList.get(0).toString();
+        } else if (outputObj instanceof String) {
+            replicateImageUrl = outputObj.toString();
+        } else {
+            throw new RuntimeException("Unexpected output format: " + outputObj);
         }
-
-        String replicateImageUrl = output.get(0);
 
         // 🔹 STEP 3: Upload AI image to Cloudinary
         Map<String, Object> finalUpload = cloudinary.uploader().upload(
